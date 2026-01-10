@@ -1,3 +1,96 @@
+# 🧠 Freeform Board
+
+An interactive, minimal **freeform thinking board** inspired by Apple Freeform — built with **Next.js**, **Zustand**, and thoughtful UX micro-interactions.
+
+This project focuses on **unstructured thinking**, mood-based notes, and distraction-free focus.
+
+---
+
+## ✨ Features
+
+### 📝 Pins (Notes)
+- Add draggable sticky-note style pins
+- Multiple organic shapes (click pin to cycle)
+- Soft pastel color palette
+- Smooth drag & hover animations
+- Auto-saved using `localStorage`
+
+---
+
+### 🎯 Focus Mode (Unique Feature)
+- **Double-click a pin** to enter focus mode
+- All other pins blur and fade out
+- Press **Esc** to exit focus mode
+
+👉 Helps users think deeply about one idea at a time  
+*(Not present in most existing boards)*
+
+---
+
+### 🎨 Mood Tagging (Unique Feature)
+- **Right-click a pin** to cycle moods
+- Mood shown as a colored dot:
+  - 🟢 Calm
+  - 🟡 Idea
+  - 🔴 Urgent
+- Mood persists across reloads
+
+👉 Adds emotional context to notes without clutter
+
+---
+
+### 🌗 Dark / Light Mode
+- Toggle from the top toolbar
+- Theme preference saved automatically
+- Optimized contrast for readability in both modes
+
+---
+
+### 🧰 Icon-Based Toolbar
+Minimal, text-free toolbar using icons:
+- ➕ Add pin
+- ↩ Undo / ↪ Redo
+- 🔍 Zoom in / out
+- 💾 Save board snapshot
+- 🌙 / ☀ Toggle theme
+- 🗑 Clear board (danger action)
+
+---
+
+### ⌨ Keyboard Shortcuts
+
+| Action | Shortcut |
+|------|--------|
+| Add pin | `N` or `+` |
+| Undo | `Ctrl / Cmd + Z` |
+| Redo | `Ctrl / Cmd + Shift + Z` or `Y` |
+| Save board | `Ctrl / Cmd + S` |
+| Finish editing pin | `Enter` |
+| New line in pin | `Shift + Enter` |
+| Exit focus mode | `Esc` |
+
+---
+
+### 💾 Board Snapshots
+- Save entire board state
+- Restore later
+- Useful for ideation stages / versions
+
+---
+
+## 🛠 Tech Stack
+
+- **Next.js (App Router)**
+- **TypeScript**
+- **Zustand** – global state & undo/redo
+- **Lucide React** – icon system
+- **CSS-in-JS + subtle animations**
+- **LocalStorage persistence**
+
+---
+
+## 📂 Project Structure
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
