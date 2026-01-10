@@ -250,8 +250,25 @@ export default function Home() {
                   value={pin.text}
                   onChange={e => updatePinText(pin.id, e.target.value)}
                   onBlur={() => setEditingId(null)}
-                  style={{ width: "100%", border: "none", background: "transparent" }}
+                  onKeyDown={(e) => {
+                    // ENTER → finish editing
+                    if (e.key === "Enter" && !e.shiftKey) {
+                      e.preventDefault(); // stop newline
+                      setEditingId(null);
+                    }
+                    // SHIFT + ENTER → allow new line (default behavior)
+                  }}
+                  style={{
+                    width: "100%",
+                    border: "none",
+                    outline: "none",
+                    resize: "none",
+                    background: "transparent",
+                    fontFamily: "inherit",
+                    fontSize: 14,
+                  }}
                 />
+
               ) : (
                 <div
                   onDoubleClick={() => setEditingId(pin.id)}
