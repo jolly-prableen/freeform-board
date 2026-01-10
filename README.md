@@ -5,6 +5,8 @@ An interactive, minimal **freeform thinking board** inspired by Apple Freeform �
 This project focuses on **unstructured thinking**, mood-based notes, and distraction-free focus.
 
 ---
+## 🔗 Live Demo
+👉 https://freeform-board.vercel.app
 
 ## ✨ Features
 
