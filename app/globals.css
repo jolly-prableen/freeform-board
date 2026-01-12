@@ -91,3 +91,52 @@ body.light select {
   50% { transform: scale(1.04); }
   100% { transform: scale(1); }
 }
+/* ==============================
+   FREEFORM LOGO (OPT 1)
+============================== */
+
+.ff-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Floating idea dot */
+.ff-logo-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #6366f1, #ec4899);
+  box-shadow:
+    0 0 8px rgba(99, 102, 241, 0.6),
+    0 0 14px rgba(236, 72, 153, 0.45);
+  animation: ff-float 2.6s ease-in-out infinite;
+}
+
+/* Logo text */
+.ff-logo-text {
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  color: inherit; /* adapts automatically to dark/light */
+}
+
+/* Gentle floating motion */
+@keyframes ff-float {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+/* Slight emphasis on hover (desktop only) */
+.ff-logo:hover .ff-logo-dot {
+  box-shadow:
+    0 0 12px rgba(99, 102, 241, 0.9),
+    0 0 18px rgba(236, 72, 153, 0.7);
+}

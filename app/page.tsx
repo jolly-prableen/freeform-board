@@ -125,6 +125,7 @@ export default function Home() {
           padding: "0 16px",
           borderRadius: 16,
           backdropFilter: "blur(16px)",
+          cursor: "default",
           background:
             theme === "dark"
               ? "rgba(15,23,42,.8)"
@@ -134,7 +135,11 @@ export default function Home() {
           zIndex: 50,
         }}
       >
-        <strong>Freeform</strong>
+        <div className="ff-logo">
+          <div className="ff-logo-dot" />
+          <span className="ff-logo-text">Freeform</span>
+        </div>
+
 
         <IconButton icon={Plus} label="Add Pin" onClick={() => { beginAction(); addPin(); }} />
         <IconButton icon={Undo2} label="Undo" onClick={undo} />
