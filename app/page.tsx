@@ -12,12 +12,23 @@ import {
   Sun,
   Moon,
   Bookmark,
+  HelpCircle,
+  Lightbulb,
+  AlertTriangle,
+  CheckCircle2,
 } from "lucide-react";
 
 /* ---------------- CONFIG ---------------- */
 const COLORS = ["#FEF3C7", "#DBEAFE", "#DCFCE7", "#FCE7F3"];
 const SHAPES = ["12px", "999px", "20px 4px 20px 4px", "24px", "12px 12px 4px 12px"];
 const MOODS = ["transparent", "#22c55e", "#f59e0b", "#ef4444"];
+
+const THOUGHT_META = {
+  question: { icon: HelpCircle, label: "Question ❓", anim: "pulse" },
+  idea: { icon: Lightbulb, label: "Idea 💡", anim: "glow" },
+  doubt: { icon: AlertTriangle, label: "Doubt ⚠️", anim: "shake" },
+  decision: { icon: CheckCircle2, label: "Decision ✅", anim: "none" },
+};
 
 /* ---------------- ICON BUTTON ---------------- */
 function IconButton({ icon: Icon, onClick, danger, label }: any) {
@@ -57,13 +68,13 @@ export default function Home() {
     saveSnapshot,
     cyclePinShape,
     cyclePinMood,
+    cyclePinThought,
   } = useBoardStore();
 
   const [theme, setTheme] = useState<"dark" | "light">("dark");
   const [editingId, setEditingId] = useState<string | null>(null);
   const [focusId, setFocusId] = useState<string | null>(null);
   const [zoom, setZoom] = useState(1);
-  const [pan, setPan] = useState({ x: 0, y: 0 });
 
   const dragging = useRef<string | null>(null);
   const offset = useRef({ x: 0, y: 0 });
@@ -98,7 +109,7 @@ export default function Home() {
 
   return (
     <div style={{ width: "100vw", height: "100vh" }}>
-      {/* -------- WIGGLE CSS -------- */}
+      {/* -------- Animations -------- */}
       <style>{`
         @keyframes wiggle {
           0% { transform: rotate(var(--r)) scale(1); }
@@ -106,9 +117,13 @@ export default function Home() {
           50% { transform: rotate(calc(var(--r) + 1deg)) scale(1.03); }
           100% { transform: rotate(var(--r)) scale(1); }
         }
-        .pin:hover {
-          animation: wiggle .35s ease-in-out;
-        }
+        @keyframes pulse { 0%{opacity:.8}50%{opacity:1}100%{opacity:.8} }
+        @keyframes glow { 0%{box-shadow:0 0 0}50%{box-shadow:0 0 18px rgba(59,130,246,.6)}100%{box-shadow:0 0 0} }
+        @keyframes shake { 0%{transform:translateX(0)}25%{transform:translateX(-2px)}50%{transform:translateX(2px)}100%{transform:translateX(0)} }
+        .pin:hover { animation: wiggle .35s ease-in-out; }
+        .pulse { animation: pulse 2s infinite; }
+        .glow { animation: glow 2.5s infinite; }
+        .shake { animation: shake .6s infinite; }
       `}</style>
 
       {/* ---------------- NAVBAR ---------------- */}
@@ -126,10 +141,7 @@ export default function Home() {
           borderRadius: 16,
           backdropFilter: "blur(16px)",
           cursor: "default",
-          background:
-            theme === "dark"
-              ? "rgba(15,23,42,.8)"
-              : "rgba(255,255,255,.9)",
+          background: theme === "dark" ? "rgba(15,23,42,.8)" : "rgba(255,255,255,.9)",
           color: theme === "dark" ? "#e5e7eb" : "#0f172a",
           boxShadow: "0 10px 30px rgba(0,0,0,.15)",
           zIndex: 50,
@@ -149,14 +161,10 @@ export default function Home() {
 
         <div style={{ flex: 1 }} />
 
-        <IconButton
-          icon={Bookmark}
-          label="Save Board"
-          onClick={() => {
-            const n = prompt("Save board as:");
-            if (n) saveSnapshot(n);
-          }}
-        />
+        <IconButton icon={Bookmark} label="Save" onClick={() => {
+          const n = prompt("Save board as:");
+          if (n) saveSnapshot(n);
+        }} />
 
         <IconButton
           icon={theme === "dark" ? Sun : Moon}
@@ -189,129 +197,105 @@ export default function Home() {
           if (!dragging.current) return;
           movePin(
             dragging.current,
-            (e.clientX - offset.current.x - pan.x) / zoom,
-            (e.clientY - offset.current.y - pan.y) / zoom
+            (e.clientX - offset.current.x) / zoom,
+            (e.clientY - offset.current.y) / zoom
           );
         }}
-        onPointerUp={() => (dragging.current = null)}
+        onPointerUp={() => dragging.current = null}
       >
         <div
           style={{
-            transform: `translate(${pan.x}px,${pan.y}px) scale(${zoom})`,
+            transform: `scale(${zoom})`,
+            transformOrigin: "0 0",
             position: "absolute",
             inset: 0,
           }}
         >
-          {pins.map(pin => (
-            <div
-              key={pin.id}
-              className="pin"
-              onPointerDown={(e) => {
-                e.stopPropagation();
-                beginAction();
-                dragging.current = pin.id;
-                offset.current = {
-                  x: e.clientX - pin.x * zoom - pan.x,
-                  y: e.clientY - pin.y * zoom - pan.y,
-                };
-              }}
-              onClick={() => cyclePinShape(pin.id)}
-              onContextMenu={(e) => {
-                e.preventDefault();
-                cyclePinMood(pin.id);
-              }}
-              onDoubleClick={() => setFocusId(pin.id)}
-              style={{
-                position: "absolute",
-                left: pin.x,
-                top: pin.y,
-                background: COLORS[Number(pin.id) % COLORS.length],
-                padding: "14px 16px",
-                borderRadius: SHAPES[pin.shape],
-                boxShadow: "0 14px 30px rgba(0,0,0,.25)",
-                cursor: "grab",
-                opacity: focusId && focusId !== pin.id ? .3 : 1,
-                filter: focusId && focusId !== pin.id ? "blur(2px)" : "none",
-                transition: "opacity .2s ease, filter .2s ease",
-                "--r": `${(Number(pin.id) % 5) - 2}deg`,
-              } as any}
-            >
-              {/* Mood Dot */}
+          {pins.map((pin) => {
+            const ThoughtIcon = THOUGHT_META[pin.thought].icon;
+            const anim = THOUGHT_META[pin.thought].anim;
+
+            return (
               <div
+                key={pin.id}
+                className={`pin ${anim}`}
+                onPointerDown={(e) => {
+                  beginAction();
+                  dragging.current = pin.id;
+                  offset.current = { x: e.clientX - pin.x, y: e.clientY - pin.y };
+                  (e.target as HTMLElement).setPointerCapture(e.pointerId);
+                }}
+                onPointerUp={(e) => {
+                  (e.target as HTMLElement).releasePointerCapture(e.pointerId);
+                  dragging.current = null;
+                }}
+                onClick={() => cyclePinShape(pin.id)}
+                onContextMenu={(e) => {
+                  e.preventDefault();
+                  cyclePinMood(pin.id);
+                }}
+                onDoubleClick={() => setFocusId(pin.id)}
                 style={{
                   position: "absolute",
-                  top: 8,
-                  right: 8,
-                  width: 8,
-                  height: 8,
-                  borderRadius: "50%",
-                  background: MOODS[pin.mood],
-                }}
-              />
-
-              {editingId === pin.id ? (
-                <textarea
-                  autoFocus
-                  value={pin.text}
-                  onChange={e => updatePinText(pin.id, e.target.value)}
-                  onBlur={() => setEditingId(null)}
-                  onKeyDown={(e) => {
-                    // ENTER → finish editing
-                    if (e.key === "Enter" && !e.shiftKey) {
-                      e.preventDefault(); // stop newline
-                      setEditingId(null);
-                    }
-                    // SHIFT + ENTER → allow new line (default behavior)
+                  left: pin.x,
+                  top: pin.y,
+                  background: COLORS[Number(pin.id) % COLORS.length],
+                  padding: "14px 16px",
+                  borderRadius: SHAPES[pin.shape],
+                  cursor: "grab",
+                  opacity: focusId && focusId !== pin.id ? .3 : 1,
+                  filter: focusId && focusId !== pin.id ? "blur(2px)" : "none",
+                  "--r": `${(Number(pin.id) % 5) - 2}deg`,
+                } as any}
+              >
+                {/* Thought Icon */}
+                <div
+                  title="Click to change thought"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    cyclePinThought(pin.id);
                   }}
+                  style={{ position: "absolute", top: 8, left: 8, cursor: "pointer" }}
+                >
+                  <ThoughtIcon size={14} />
+                </div>
+
+                {/* Mood Dot */}
+                <div
                   style={{
-                    width: "100%",
-                    border: "none",
-                    outline: "none",
-                    resize: "none",
-                    background: "transparent",
-                    fontFamily: "inherit",
-                    fontSize: 14,
+                    position: "absolute",
+                    top: 8,
+                    right: 8,
+                    width: 8,
+                    height: 8,
+                    borderRadius: "50%",
+                    background: MOODS[pin.mood],
                   }}
                 />
 
-              ) : (
-                <div
-                  onDoubleClick={() => setEditingId(pin.id)}
-                  style={{ color: "#0f172a" }}
-                >
-                  {pin.text || "Double-click to edit"}
-                </div>
-              )}
-
-              {!pin.mood && (
-                <div style={{ fontSize: 10, opacity: .5, marginTop: 4 }}>
-                  Right-click → Mood
-                </div>
-              )}
-            </div>
-          ))}
+                {editingId === pin.id ? (
+                  <textarea
+                    autoFocus
+                    value={pin.text}
+                    onChange={(e) => updatePinText(pin.id, e.target.value)}
+                    onBlur={() => setEditingId(null)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" && !e.shiftKey) {
+                        e.preventDefault();
+                        setEditingId(null);
+                      }
+                    }}
+                    style={{ width: "100%", border: "none", background: "transparent" }}
+                  />
+                ) : (
+                  <div onDoubleClick={() => setEditingId(pin.id)}>
+                    {pin.text || "Double-click to edit"}
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
-
-        {/* EMPTY STATE */}
-        {pins.length === 0 && (
-          <div
-            style={{
-              position: "absolute",
-              inset: 0,
-              display: "grid",
-              placeItems: "center",
-              opacity: .6,
-              textAlign: "center",
-            }}
-          >
-            <div>
-              <p><b>N</b> or <b>+</b> → Add pin</p>
-              <p>Right-click → Mood</p>
-              <p>Double-click → Focus</p>
-              <p>Esc → Exit focus</p>
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );

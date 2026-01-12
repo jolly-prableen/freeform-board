@@ -1,7 +1,8 @@
 import "./globals.css";
 
 export const metadata = {
-  title: "Freeform Digital Board",
+  title: "Freeform Board",
+  description: "Thinking-first interactive board",
 };
 
 export default function RootLayout({

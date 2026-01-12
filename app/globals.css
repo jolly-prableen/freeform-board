@@ -1,6 +1,6 @@
-/* -----------------------------
-   Global Reset
-------------------------------*/
+/* ==============================
+   GLOBAL RESET
+============================== */
 * {
   margin: 0;
   padding: 0;
@@ -17,9 +17,9 @@ body {
   overflow: hidden;
 }
 
-/* -----------------------------
-   Button Reset (Icons Only)
-------------------------------*/
+/* ==============================
+   BUTTON RESET (ICON ONLY)
+============================== */
 button {
   all: unset;
   cursor: pointer;
@@ -28,7 +28,6 @@ button {
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
-/* Icon buttons (toolbar & pin tools) */
 button:hover {
   transform: scale(1.05);
 }
@@ -42,9 +41,9 @@ button[data-danger="true"] {
   color: #ef4444;
 }
 
-/* -----------------------------
-   Select (Saved Boards)
-------------------------------*/
+/* ==============================
+   SELECT (SAVED BOARDS)
+============================== */
 select {
   background: rgba(15, 23, 42, 0.6);
   color: #e5e7eb;
@@ -59,38 +58,67 @@ select:focus {
   border-color: rgba(99, 102, 241, 0.5);
 }
 
-/* -----------------------------
-   Textareas (Pin Editing)
-------------------------------*/
+/* ==============================
+   TEXTAREA (PIN EDITING)
+   IMPORTANT: no fixed color here
+============================== */
 textarea {
   font-family: inherit;
   font-size: 14px;
-  color: #0f172a;
   line-height: 1.4;
+  background: transparent;
+  border: none;
+  outline: none;
+  resize: none;
+}
+/* ==============================
+   PIN TEXT VISIBILITY FIX
+============================== */
+
+/* Default pin text (dark text on light sticky notes) */
+.pin {
+  color: #0f172a;
 }
 
-/* -----------------------------
-   Light Mode Overrides
-------------------------------*/
+/* While editing (textarea already handled) */
+.pin textarea {
+  color: #0f172a;
+}
+
+/* ==============================
+   DARK MODE TEXT
+============================== */
+body:not(.light) textarea {
+  color: #0f172a; /* dark text on light sticky notes */
+}
+
+/* ==============================
+   LIGHT MODE OVERRIDES
+============================== */
 body.light {
   background: #f8fafc;
   color: #0f172a;
 }
 
 body.light select {
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.85);
   color: #0f172a;
   border: 1px solid rgba(0, 0, 0, 0.08);
 }
 
-/* -----------------------------
-   Subtle Motion (used sparingly)
-------------------------------*/
+body.light textarea {
+  color: #0f172a;
+}
+
+/* ==============================
+   SUBTLE MOTION (OPTIONAL)
+============================== */
 @keyframes soft-pop {
   0% { transform: scale(1); }
   50% { transform: scale(1.04); }
   100% { transform: scale(1); }
 }
+
 /* ==============================
    FREEFORM LOGO (OPT 1)
 ============================== */

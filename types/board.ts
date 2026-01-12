@@ -1,8 +1,14 @@
-export type Pin = {
+export type ThoughtType = "idea" | "question" | "doubt" | "decision";
+
+export interface Pin {
   id: string;
   x: number;
   y: number;
   text: string;
+
   shape: number;
-  mood: number; // 0–3
-};
+  mood: number;
+
+  thought: ThoughtType;   // 🧠 thinking state
+  createdAt: number;     // ⏳ timeline
+}
