@@ -21,8 +21,18 @@ type BoardStore = {
   future: Pin[][];
   snapshots: Snapshot[];
 
+  // 🔽 ADDED: canvas pan state
+  panX: number;
+  panY: number;
+  setPan: (x: number, y: number) => void;
+
+  // 🔽 ADDED: grouping helpers
+  groupPins: (ids: string[]) => void;
+  ungroupPins: (groupId: string) => void;
+
   beginAction: () => void;
   addPin: () => void;
+  addImagePin: (src: string, w: number, h: number) => void;
   movePin: (id: string, x: number, y: number) => void;
   updatePinText: (id: string, text: string) => void;
 
@@ -51,6 +61,10 @@ export const useBoardStore = create<BoardStore>((set, get) => ({
   history: [],
   future: [],
   snapshots: [],
+
+  // 🔽 ADDED: canvas pan state
+  panX: 0,
+  panY: 0,
 
   /* -----------------------------
      Load persisted data (safe)
@@ -105,13 +119,57 @@ export const useBoardStore = create<BoardStore>((set, get) => ({
     }),
 
   /* -----------------------------
-     Move pin
+     Add image pin
+  ------------------------------*/
+  addImagePin: (src, w, h) =>
+    set((state) => {
+      const updated: Pin[] = [
+        ...state.pins,
+        {
+          id: Date.now().toString(),
+          x: 200,
+          y: 200,
+          text: "",
+          image: src,
+          imageSize: { w, h },
+          shape: 0,
+          mood: 0,
+          thought: "idea",
+          createdAt: Date.now(),
+        },
+      ];
+      persist("board-pins", updated);
+      return { pins: updated };
+    }),
+
+  /* -----------------------------
+     Move pin (WITH GROUP SUPPORT)
   ------------------------------*/
   movePin: (id, x, y) =>
     set((state) => {
+      const target = state.pins.find((p) => p.id === id);
+      if (!target) return {};
+
+      // 🔽 move whole group
+      if (target.groupId) {
+        const dx = x - target.x;
+        const dy = y - target.y;
+
+        const updated = state.pins.map((p) =>
+          p.groupId === target.groupId
+            ? { ...p, x: p.x + dx, y: p.y + dy }
+            : p
+        );
+
+        persist("board-pins", updated);
+        return { pins: updated };
+      }
+
+      // 🔽 single pin move (original behavior)
       const updated = state.pins.map((p) =>
         p.id === id ? { ...p, x, y } : p
       );
+
       persist("board-pins", updated);
       return { pins: updated };
     }),
@@ -153,7 +211,7 @@ export const useBoardStore = create<BoardStore>((set, get) => ({
     }),
 
   /* -----------------------------
-     🧠 Cycle Thought State (CORE FEATURE)
+     🧠 Cycle Thought State
   ------------------------------*/
   cyclePinThought: (id) =>
     set((state) => {
@@ -213,6 +271,37 @@ export const useBoardStore = create<BoardStore>((set, get) => ({
     });
     persist("board-pins", next);
   },
+
+  /* -----------------------------
+     Grouping helpers
+  ------------------------------*/
+  groupPins: (ids) =>
+    set((state) => {
+      if (ids.length < 2) return {};
+      const gid = Date.now().toString();
+
+      const updated = state.pins.map((p) =>
+        ids.includes(p.id) ? { ...p, groupId: gid } : p
+      );
+
+      persist("board-pins", updated);
+      return { pins: updated };
+    }),
+
+  ungroupPins: (groupId) =>
+    set((state) => {
+      const updated = state.pins.map((p) =>
+        p.groupId === groupId ? { ...p, groupId: undefined } : p
+      );
+
+      persist("board-pins", updated);
+      return { pins: updated };
+    }),
+
+  /* -----------------------------
+     Canvas pan
+  ------------------------------*/
+  setPan: (x, y) => set({ panX: x, panY: y }),
 
   /* -----------------------------
      Clear board
