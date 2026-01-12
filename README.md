@@ -1,7 +1,7 @@
 # 🧠 Thinkspace
 ### A cognition-first freeform thinking board.
 
-Freeform Board is an interactive, minimal **thinking board** inspired by Apple Freeform — but designed around **how thoughts form**, not just how notes are placed.
+Thinkspace is designed around how people think — not just how they write notes.
 
 Built with **Next.js, Zustand, and thoughtful UX micro-interactions**, this project focuses on unstructured ideation, emotional context, and deep focus.
 
