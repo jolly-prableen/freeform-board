@@ -1,5 +1,5 @@
-# 🧠 Freeform Board  
-### A cognition-first thinking canvas
+#🧠 Thinkspace
+### A cognition-first freeform thinking board.
 
 Freeform Board is an interactive, minimal **thinking board** inspired by Apple Freeform — but designed around **how thoughts form**, not just how notes are placed.
 
