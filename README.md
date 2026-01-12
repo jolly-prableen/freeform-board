@@ -1,103 +1,120 @@
-# 🧠 Freeform Board
+# 🧠 Freeform Board  
+### A cognition-first thinking canvas
 
-An interactive, minimal **freeform thinking board** inspired by Apple Freeform — built with **Next.js**, **Zustand**, and thoughtful UX micro-interactions.
+Freeform Board is an interactive, minimal **thinking board** inspired by Apple Freeform — but designed around **how thoughts form**, not just how notes are placed.
 
-This project focuses on **unstructured thinking**, mood-based notes, and distraction-free focus.
+Built with **Next.js, Zustand, and thoughtful UX micro-interactions**, this project focuses on unstructured ideation, emotional context, and deep focus.
+
+> **“This board is designed around cognition, not collaboration.”**
 
 ---
+
 ## 🔗 Live Demo
 👉 https://freeform-board.vercel.app
 
-## ✨ Features
+---
+
+## ✨ Core Features
 
 ### 📝 Pins (Notes)
-- Add draggable sticky-note style pins
-- Multiple organic shapes (click pin to cycle)
-- Soft pastel color palette
-- Smooth drag & hover animations
-- Auto-saved using `localStorage`
+- Draggable, sticky-note style pins  
+- Multiple **organic shapes** (click a pin to cycle)
+- Soft pastel palette for low visual fatigue
+- Subtle hover & motion feedback
+- Automatically saved using **localStorage**
 
 ---
 
-### 🎯 Focus Mode (Unique Feature)
-- **Double-click a pin** to enter focus mode
-- All other pins blur and fade out
+### 🎯 Focus Mode *(Unique Feature)*
+- **Double-click** any pin to enter focus mode
+- All other pins softly **blur & fade**
 - Press **Esc** to exit focus mode
 
-👉 Helps users think deeply about one idea at a time  
-*(Not present in most existing boards)*
+👉 Encourages **deep thinking on a single idea**  
+*(Most existing boards focus on collaboration — not concentration)*
 
 ---
 
-### 🎨 Mood Tagging (Unique Feature)
-- **Right-click a pin** to cycle moods
-- Mood shown as a colored dot:
-  - 🟢 Calm
-  - 🟡 Idea
-  - 🔴 Urgent
-- Mood persists across reloads
+### 🎨 Mood Tagging *(Unique Feature)*
+- **Right-click** a pin to cycle through moods
+- Mood is shown as a small, non-intrusive colored dot:
 
-👉 Adds emotional context to notes without clutter
+| Mood | Meaning |
+|----|----|
+| 🟢 Calm | Stable / resolved thought |
+| 🟡 Idea | Exploration / brainstorming |
+| 🔴 Urgent | Requires attention |
+
+- Mood state persists across reloads
+
+👉 Adds **emotional context** without cluttering the UI
 
 ---
 
 ### 🌗 Dark / Light Mode
-- Toggle from the top toolbar
+- Toggle directly from the top toolbar
 - Theme preference saved automatically
 - Optimized contrast for readability in both modes
 
 ---
 
 ### 🧰 Icon-Based Toolbar
-Minimal, text-free toolbar using icons:
-- ➕ Add pin
-- ↩ Undo / ↪ Redo
-- 🔍 Zoom in / out
-- 💾 Save board snapshot
-- 🌙 / ☀ Toggle theme
-- 🗑 Clear board (danger action)
+A minimal, **text-free** toolbar designed to reduce distraction:
+
+- ➕ Add pin  
+- ↩ Undo / ↪ Redo  
+- 🔍 Zoom in / out  
+- 💾 Save board snapshot  
+- 🌙 / ☀ Toggle theme  
+- 🗑 Clear board *(danger action)*  
 
 ---
 
 ### ⌨ Keyboard Shortcuts
 
 | Action | Shortcut |
-|------|--------|
+|-----|-----|
 | Add pin | `N` or `+` |
 | Undo | `Ctrl / Cmd + Z` |
 | Redo | `Ctrl / Cmd + Shift + Z` or `Y` |
 | Save board | `Ctrl / Cmd + S` |
 | Finish editing pin | `Enter` |
-| New line in pin | `Shift + Enter` |
+| New line inside pin | `Shift + Enter` |
 | Exit focus mode | `Esc` |
 
 ---
 
 ### 💾 Board Snapshots
-- Save entire board state
+- Save the entire board state
 - Restore later
-- Useful for ideation stages / versions
+- Useful for **ideation stages & versions**
 
 ---
 
 ## 🛠 Tech Stack
-
 - **Next.js (App Router)**
 - **TypeScript**
-- **Zustand** – global state & undo/redo
-- **Lucide React** – icon system
-- **CSS-in-JS + subtle animations**
-- **LocalStorage persistence**
+- **Zustand** — global state & undo/redo
+- **Lucide React** — icon system
+- **CSS-in-JS** + subtle animations
+- **LocalStorage** persistence
 
 ---
 
 ## 📂 Project Structure
+This is a **Next.js App Router** project bootstrapped with `create-next-app`.
 
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+Key files:
+- `app/page.tsx` → main board UI
+- `store/boardStore.ts` → Zustand state (pins, undo/redo, moods)
+- `types/board.ts` → pin & thought models
+- `app/globals.css` → global styles & logo system
 
-## Getting Started
+---
 
-First, run the development server:
+## 🚀 Getting Started
+
+Run the development server:
 
 ```bash
 npm run dev
@@ -107,25 +124,3 @@ yarn dev
 pnpm dev
 # or
 bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
